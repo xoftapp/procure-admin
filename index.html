@@ -75,18 +75,7 @@
     .rt-row { border-bottom: 1px dotted #cbd5e1; }
     .rt-head span:nth-child(2), .rt-row span:nth-child(2) { text-align: center; }
     .rt-head span:nth-child(3), .rt-row span:nth-child(3) { text-align: right; font-variant-numeric: tabular-nums; }
-    .receipt-total-box {
-      margin-top: 14px;
-      background: var(--primary);
-      color: white;
-      padding: 10px 14px;
-      border-radius: 8px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-weight: bold;
-      font-size: 1.05rem;
-    }
+    .receipt-total-box { margin-top: 14px; background: var(--primary); color: white; padding: 10px 14px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 1.05rem; }
     .receipt-footer { text-align: center; margin-top: 1.5rem; padding-top: 1rem; border-top: 2px dashed #cbd5e1; font-size: 0.85rem; color: var(--gray); }
     .settings-section { background: #f8fafc; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem; }
     .settings-section h3 { color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; }
@@ -157,6 +146,9 @@
       <div id="scriptBanner" class="banner" style="display:none;">
         <span>⚠️ Automatisation non configurée : ajoutez l'URL du script Apps Script.</span>
         <button class="action-btn btn-edit" onclick="showSettings()">Configurer</button>
+      </div>
+      <div id="netBanner" class="banner" style="display:none;">
+        <span>⚠️ Actualisation momentanément impossible (serveur Google occupé). Vos données affichées restent valides : cliquez sur 🔄 Actualiser.</span>
       </div>
       <div class="stats-grid">
         <div class="stat-card"><h3>Total commandes</h3><div class="stat-value" id="statTotal">0</div></div>
@@ -276,15 +268,16 @@
     let editingId = null;
 
     // =====================================================
-    // FORMATAGE DES MONTANTS (espaces normaux, 100% compatibles PDF)
+    // OUTILS : attente, formatage, nettoyage
     // =====================================================
+    function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
     function formatMoney(value) {
       const n = Math.round(Number(String(value).replace(/[^\d.-]/g, '')) || 0);
       const s = String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
       return (n < 0 ? '-' : '') + s;
     }
 
-    // Nettoyage des caractères invisibles incompatibles avec les polices PDF
     function pdfSafe(t) {
       return String(t == null ? '' : t)
         .replace(/[\u00a0\u202f\u2009\u2007]/g, ' ')
@@ -295,6 +288,45 @@
 
     function escapeHtml(t) {
       return String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    // Lecture JSON avec nouvelles tentatives automatiques
+    async function fetchJSONRetry(url, tries) {
+      let lastError = null;
+      for (let attempt = 1; attempt <= (tries || 3); attempt++) {
+        try {
+          const res = await fetch(url, { cache: 'no-store' });
+          if (!res.ok) throw new Error('HTTP ' + res.status);
+          const data = await res.json();
+          if (data && data.ok) return data;
+          throw new Error(data && data.error ? data.error : 'Réponse invalide');
+        } catch (e) {
+          lastError = e;
+          if (attempt < (tries || 3)) await sleep(900 * attempt);
+        }
+      }
+      throw lastError;
+    }
+
+    // Écriture avec nouvelle tentative automatique
+    async function postAction(payload) {
+      let lastError = null;
+      for (let attempt = 1; attempt <= 3; attempt++) {
+        try {
+          const res = await fetch(config.scriptUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          });
+          const data = await res.json();
+          if (data && data.ok) return data;
+          throw new Error(data && data.error ? data.error : 'Erreur serveur');
+        } catch (e) {
+          lastError = e;
+          if (attempt < 3) await sleep(900 * attempt);
+        }
+      }
+      throw lastError;
     }
 
     // =====================================================
@@ -405,45 +437,37 @@
     }
 
     // =====================================================
-    // COMMUNICATION AVEC LE SCRIPT
-    // =====================================================
-    async function postAction(payload) {
-      const res = await fetch(config.scriptUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(payload)
-      });
-      return await res.json();
-    }
-
-    // =====================================================
     // COMMANDES
     // =====================================================
     async function loadOrders() {
       const tbody = document.getElementById('ordersTableBody');
-      tbody.innerHTML = '<tr><td colspan="7" class="loading">Chargement des commandes...</td></tr>';
+      if (!orders.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="loading">Chargement des commandes...</td></tr>';
+      }
       document.getElementById('refreshIndicator').classList.add('active');
+      document.getElementById('netBanner').style.display = 'none';
       try {
         if (config.scriptUrl) {
-          const res = await fetch(config.scriptUrl + '?action=list');
-          const data = await res.json();
-          if (data && data.ok) {
-            orders = (data.orders || []).map(function (o) { o.status = normalizeStatus(o.status); return o; });
-            updateStats();
-            filterOrders();
-            return;
-          }
-          throw new Error(data && data.error ? data.error : 'Réponse invalide du script');
+          const data = await fetchJSONRetry(config.scriptUrl + '?action=list', 3);
+          orders = (data.orders || []).map(function (o) { o.status = normalizeStatus(o.status); return o; });
+          updateStats();
+          filterOrders();
+          return;
         }
         if (config.sheetUrl) {
-          const response = await fetch(config.sheetUrl);
+          const response = await fetch(config.sheetUrl, { cache: 'no-store' });
           parseOrdersCSV(await response.text());
           return;
         }
         tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Aucune source configurée. Ouvrez ⚙️ Paramètres.</td></tr>';
       } catch (e) {
         console.error(e);
-        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Erreur de chargement. Vérifiez l\'URL dans ⚙️ Paramètres.</td></tr>';
+        if (orders.length) {
+          // Panne momentanée : on conserve le tableau affiché
+          document.getElementById('netBanner').style.display = 'flex';
+        } else {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Erreur de chargement. Vérifiez l\'URL dans ⚙️ Paramètres.</td></tr>';
+        }
       } finally {
         document.getElementById('refreshIndicator').classList.remove('active');
       }
@@ -534,10 +558,10 @@
       selectElement.classList.add('saving');
       selectElement.classList.remove('saved');
       try {
-        const r = await postAction({ action: 'update', order: Object.assign({}, order, { status: newStatus }) });
-        if (!r.ok) throw new Error(r.error || 'Erreur');
+        await postAction({ action: 'update', order: Object.assign({}, order, { status: newStatus }) });
         selectElement.classList.remove('saving');
         selectElement.classList.add('saved');
+        await sleep(500);
         await loadOrders();
       } catch (e) {
         alert('Erreur : ' + e.message);
@@ -573,9 +597,9 @@
         notes: document.getElementById('editNotes').value.trim()
       };
       try {
-        const r = await postAction({ action: 'update', order: order });
-        if (!r.ok) throw new Error(r.error || 'Erreur');
+        await postAction({ action: 'update', order: order });
         closeModal('editModal');
+        await sleep(500);
         await loadOrders();
       } catch (e) { alert('Erreur : ' + e.message); }
     }
@@ -584,14 +608,14 @@
       const o = orders.find(function (x) { return x.id === id; });
       if (!confirm('Supprimer définitivement la commande #' + id + ' (' + (o ? o.client : '') + ') ?')) return;
       try {
-        const r = await postAction({ action: 'delete', id: id });
-        if (!r.ok) throw new Error(r.error || 'Erreur');
+        await postAction({ action: 'delete', id: id });
+        await sleep(500);
         await loadOrders();
       } catch (e) { alert('Erreur : ' + e.message); }
     }
 
     // =====================================================
-    // REÇU : analyse des articles (nom, quantité, montant séparés)
+    // REÇU
     // =====================================================
     function parseArticles(text) {
       return String(text).split(',').map(function (a) { return a.trim(); }).filter(function (a) { return a; }).map(function (a) {
@@ -652,12 +676,12 @@
     }
 
     // =====================================================
-    // GÉNÉRATION PDF A5 — police Times, tableau des montants
+    // GÉNÉRATION PDF A5
     // =====================================================
     async function downloadPDF() {
       if (!currentOrder) return;
       while (typeof window.jspdf === 'undefined') {
-        await new Promise(function (r) { setTimeout(r, 100); });
+        await sleep(100);
       }
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a5' });
@@ -770,7 +794,7 @@
       if (!clientEmail) return;
       try {
         while (typeof emailjs === 'undefined') {
-          await new Promise(function (r) { setTimeout(r, 100); });
+          await sleep(100);
         }
         emailjs.init(config.emailKey);
         await emailjs.send(config.emailService, config.emailTemplate, {
