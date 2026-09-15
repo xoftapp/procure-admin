@@ -28,7 +28,6 @@
     .login-box h1 { color: var(--primary); margin-bottom: 0.5rem; font-size: 1.8rem; }
     .login-box p { color: var(--gray); margin-bottom: 2rem; }
     .login-box input { width: 100%; padding: 1rem; margin: 0.8rem 0; border: 2px solid #cbd5e1; border-radius: 10px; font-size: 1rem; }
-    .login-box input:focus { outline: none; border-color: var(--primary); }
     .login-btn { background: linear-gradient(to right, var(--primary), var(--primary-dark)); color: white; border: none; padding: 1rem; border-radius: 10px; width: 100%; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-top: 1rem; }
     .dashboard { display: none; }
     .header { background: linear-gradient(to right, var(--primary), #1d4ed8); color: white; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
@@ -36,6 +35,7 @@
     .header-actions { display: flex; gap: 10px; flex-wrap: wrap; }
     .header-btn { background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3); padding: 0.6rem 1rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; }
     .container { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; }
+    .banner { background: #fef3c7; border-left: 4px solid var(--warning); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
     .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card { background: white; padding: 1.5rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-left: 4px solid var(--primary); }
     .stat-card h3 { color: var(--gray); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem; }
@@ -54,11 +54,13 @@
     .status-pending { background: #fef3c7; color: #92400e; }
     .status-progress { background: #dbeafe; color: #1e40af; }
     .status-delivered { background: #d1fae5; color: #065f46; }
-    .action-btn { padding: 0.5rem 0.8rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin-right: 5px; color: white; }
+    .action-btn { padding: 0.5rem 0.7rem; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; margin-right: 4px; color: white; }
     .btn-pdf { background: var(--primary); }
+    .btn-edit { background: #64748b; }
+    .btn-status { background: var(--warning); }
+    .btn-delete { background: #ef4444; }
     .btn-email { background: var(--success); }
     .btn-whatsapp { background: #25d366; }
-    .btn-deliver { background: var(--warning); }
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 20px; }
     .modal-content { background: white; border-radius: 12px; padding: 2rem; max-width: 600px; width: 100%; max-height: 90vh; overflow-y: auto; }
     .modal-content h2 { color: var(--primary); margin-bottom: 1.5rem; }
@@ -76,7 +78,7 @@
     .settings-section h3 { color: var(--primary); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #e2e8f0; }
     .form-group { margin-bottom: 1rem; }
     .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
-    .form-group input, .form-group textarea { width: 100%; padding: 0.8rem; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.8rem; border: 2px solid #cbd5e1; border-radius: 8px; font-size: 0.95rem; }
     .form-group small { color: var(--gray); }
     .save-btn { background: var(--success); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; font-weight: bold; }
     .loading, .empty-state { text-align: center; padding: 3rem; color: var(--gray); }
@@ -93,18 +95,17 @@
   <div id="wizardModal" class="modal">
     <div class="modal-content">
       <h2>👋 Bienvenue — Configuration initiale</h2>
-      <p style="color: var(--gray); margin-bottom: 1.5rem;">
-        Remplissez ces deux champs obligatoires pour activer votre Dashboard.
-        Vous pourrez tout modifier plus tard dans ⚙️ Paramètres.
-      </p>
       <div class="form-group">
-        <label>URL de la feuille "Commandes" (obligatoire)</label>
-        <input type="text" id="wizSheetUrl" placeholder="https://docs.google.com/spreadsheets/...">
-        <small>Lien CSV copié à la PARTIE 1 de ce guide</small>
+        <label>URL du script Apps Script (finit par /exec)</label>
+        <input type="text" id="wizScriptUrl" placeholder="https://script.google.com/macros/s/.../exec">
       </div>
       <div class="form-group">
-        <label>Mot de passe administrateur (obligatoire)</label>
+        <label>Mot de passe administrateur</label>
         <input type="password" id="wizPassword" placeholder="4 caractères minimum">
+      </div>
+      <div class="form-group">
+        <label>URL CSV de secours (facultatif)</label>
+        <input type="text" id="wizSheetUrl" placeholder="Laisser vide si vous avez l'URL /exec">
       </div>
       <div class="form-group">
         <label>Clé publique EmailJS (facultatif)</label>
@@ -135,6 +136,10 @@
       </div>
     </div>
     <div class="container">
+      <div id="scriptBanner" class="banner" style="display:none;">
+        <span>⚠️ Automatisation non configurée : ajoutez l'URL du script Apps Script pour activer l'enregistrement, la modification et la suppression des commandes.</span>
+        <button class="action-btn btn-status" onclick="showSettings()">Configurer</button>
+      </div>
       <div class="stats-grid">
         <div class="stat-card"><h3>Total commandes</h3><div class="stat-value" id="statTotal">0</div></div>
         <div class="stat-card pending"><h3>En attente</h3><div class="stat-value" id="statPending">0</div></div>
@@ -177,6 +182,28 @@
     </div>
   </div>
 
+  <!-- MODIFICATION D'UNE COMMANDE -->
+  <div id="editModal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal('editModal')">×</button>
+      <h2>✏️ Modifier la commande <span id="editIdLabel"></span></h2>
+      <div class="form-group"><label>Date</label><input type="text" id="editDate"></div>
+      <div class="form-group"><label>Client</label><input type="text" id="editClient"></div>
+      <div class="form-group"><label>Téléphone</label><input type="text" id="editPhone"></div>
+      <div class="form-group"><label>Articles (séparés par des virgules)</label><textarea id="editArticles" rows="3"></textarea></div>
+      <div class="form-group"><label>Total (FCFA)</label><input type="text" id="editTotal"></div>
+      <div class="form-group"><label>Statut</label>
+        <select id="editStatus">
+          <option>En attente</option>
+          <option>En cours</option>
+          <option>Livrée</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Notes</label><input type="text" id="editNotes"></div>
+      <button class="save-btn" onclick="saveEdit()">💾 Enregistrer les modifications</button>
+    </div>
+  </div>
+
   <!-- PARAMÈTRES -->
   <div id="settingsModal" class="modal">
     <div class="modal-content">
@@ -185,7 +212,12 @@
       <div class="settings-section">
         <h3>🔗 Source des commandes</h3>
         <div class="form-group">
-          <label>URL de la feuille "Commandes"</label>
+          <label>URL du script Apps Script (recommandé, finit par /exec)</label>
+          <input type="text" id="cfgScriptUrl">
+          <small>Active l'enregistrement automatique, la modification et la suppression</small>
+        </div>
+        <div class="form-group">
+          <label>URL CSV de secours (facultatif)</label>
           <input type="text" id="cfgSheetUrl">
         </div>
       </div>
@@ -220,18 +252,15 @@
   </div>
 
   <script>
-    // ============ STOCKAGE DE LA CONFIGURATION (aucune ligne à modifier) ============
     const CONFIG_KEY = 'procure_admin_config';
-    const OVERRIDES_KEY = 'procure_status_overrides';
-
     let config = null;
     let orders = [];
     let currentOrder = null;
+    let editingId = null;
 
     function defaultConfig() {
       return {
-        sheetUrl: '',
-        password: '',
+        scriptUrl: '', sheetUrl: '', password: '',
         emailKey: '', emailService: '', emailTemplate: '',
         shopName: 'PROCURE SHOP', shopAddress: '', shopPhone: '', shopEmail: '',
         logoUrl: '', footer: 'Merci de votre confiance !'
@@ -243,14 +272,11 @@
       config = saved ? Object.assign(defaultConfig(), JSON.parse(saved)) : defaultConfig();
     }
 
-    function saveConfig() {
-      localStorage.setItem(CONFIG_KEY, JSON.stringify(config));
-    }
+    function saveConfig() { localStorage.setItem(CONFIG_KEY, JSON.stringify(config)); }
 
-    // ============ DÉMARRAGE ============
     document.addEventListener('DOMContentLoaded', function () {
       loadConfig();
-      if (!config.sheetUrl || !config.password) {
+      if (!config.password) {
         document.getElementById('wizardModal').style.display = 'flex';
       } else if (localStorage.getItem('procure_logged_in') === 'true') {
         showDashboard();
@@ -263,55 +289,81 @@
     });
 
     function saveWizard() {
-      const url = document.getElementById('wizSheetUrl').value.trim();
+      const scriptUrl = document.getElementById('wizScriptUrl').value.trim();
       const pwd = document.getElementById('wizPassword').value.trim();
+      const sheetUrl = document.getElementById('wizSheetUrl').value.trim();
       const key = document.getElementById('wizEmailKey').value.trim();
-
-      if (!url.startsWith('http')) { alert('Veuillez coller une URL valide (commençant par https://)'); return; }
+      if (!scriptUrl && !sheetUrl) { alert('Renseignez au moins l\'URL du script (/exec) ou l\'URL CSV de secours.'); return; }
       if (pwd.length < 4) { alert('Le mot de passe doit contenir au moins 4 caractères.'); return; }
-
-      config.sheetUrl = url;
+      config.scriptUrl = scriptUrl;
+      config.sheetUrl = sheetUrl;
       config.password = pwd;
       config.emailKey = key;
       saveConfig();
       location.reload();
     }
 
-    // ============ CONNEXION ============
     function login() {
-      const pwd = document.getElementById('passwordInput').value;
-      if (pwd === config.password) {
+      if (document.getElementById('passwordInput').value === config.password) {
         localStorage.setItem('procure_logged_in', 'true');
         showDashboard();
-      } else {
-        alert('Mot de passe incorrect.');
-      }
+      } else { alert('Mot de passe incorrect.'); }
     }
 
-    function logout() {
-      localStorage.removeItem('procure_logged_in');
-      location.reload();
-    }
+    function logout() { localStorage.removeItem('procure_logged_in'); location.reload(); }
 
     function showDashboard() {
       document.getElementById('loginPage').style.display = 'none';
       document.getElementById('dashboard').style.display = 'block';
+      document.getElementById('scriptBanner').style.display = config.scriptUrl ? 'none' : 'flex';
       loadOrders();
+    }
+
+    // ============ COMMUNICATION AVEC LE SCRIPT ============
+    async function postAction(payload) {
+      const res = await fetch(config.scriptUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
     }
 
     // ============ COMMANDES ============
     async function loadOrders() {
       const tbody = document.getElementById('ordersTableBody');
       tbody.innerHTML = '<tr><td colspan="7" class="loading">Chargement des commandes...</td></tr>';
-      try {
-        const response = await fetch(config.sheetUrl);
-        if (!response.ok) throw new Error('HTTP ' + response.status);
-        const csvText = await response.text();
-        parseOrdersCSV(csvText);
-      } catch (error) {
-        console.error(error);
-        tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Erreur de chargement. Vérifiez l\'URL dans ⚙️ Paramètres.</td></tr>';
+
+      if (config.scriptUrl) {
+        try {
+          const res = await fetch(config.scriptUrl + '?action=list');
+          const data = await res.json();
+          if (data && data.ok) {
+            orders = data.orders || [];
+            updateStats();
+            filterOrders();
+            return;
+          }
+          throw new Error(data && data.error ? data.error : 'Réponse invalide du script');
+        } catch (e) {
+          console.error(e);
+          tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Erreur de lecture via le script Apps Script.<br>Vérifiez l\'URL /exec dans ⚙️ Paramètres.</td></tr>';
+          return;
+        }
       }
+
+      if (config.sheetUrl) {
+        try {
+          const response = await fetch(config.sheetUrl);
+          const csvText = await response.text();
+          parseOrdersCSV(csvText);
+        } catch (e) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Erreur de chargement CSV.</td></tr>';
+        }
+        return;
+      }
+
+      tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Aucune source configurée. Ouvrez ⚙️ Paramètres.</td></tr>';
     }
 
     function parseCSVLine(line) {
@@ -328,22 +380,14 @@
 
     function parseOrdersCSV(csvText) {
       const lines = csvText.trim().split(/\r?\n/);
-      const overrides = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}');
       orders = [];
       for (let i = 1; i < lines.length; i++) {
         if (!lines[i].trim()) continue;
         const v = parseCSVLine(lines[i]);
         if (v.length < 6) continue;
-        const id = v[0];
         orders.push({
-          id: id,
-          date: v[1] || '',
-          client: v[2] || '',
-          phone: v[3] || '',
-          articles: v[4] || '',
-          total: v[5] || '0',
-          status: overrides[id] || v[6] || 'En attente',
-          notes: v[7] || ''
+          id: v[0], date: v[1] || '', client: v[2] || '', phone: v[3] || '',
+          articles: v[4] || '', total: v[5] || '0', status: v[6] || 'En attente', notes: v[7] || ''
         });
       }
       updateStats();
@@ -383,23 +427,69 @@
           '<td>' + o.phone + '</td>' +
           '<td><strong>' + Number(o.total).toLocaleString('fr-FR') + ' FCFA</strong></td>' +
           '<td><span class="status-badge ' + cls + '">' + o.status + '</span></td>' +
-          '<td>' +
-            '<button class="action-btn btn-pdf" onclick="showReceipt(\'' + o.id + '\')">📄 Reçu</button>' +
-            '<button class="action-btn btn-deliver" onclick="changeStatus(\'' + o.id + '\')">🔄 Statut</button>' +
+          '<td style="white-space:nowrap;">' +
+            '<button class="action-btn btn-pdf" title="Reçu" onclick="showReceipt(\'' + o.id + '\')">📄</button>' +
+            '<button class="action-btn btn-edit" title="Modifier" onclick="openEdit(\'' + o.id + '\')">✏️</button>' +
+            '<button class="action-btn btn-status" title="Changer le statut" onclick="changeStatus(\'' + o.id + '\')">🔄</button>' +
+            '<button class="action-btn btn-delete" title="Supprimer" onclick="deleteOrder(\'' + o.id + '\')">🗑️</button>' +
           '</td></tr>';
       }).join('');
     }
 
-    function changeStatus(id) {
+    async function changeStatus(id) {
       const order = orders.find(o => o.id === id);
       if (!order) return;
       const cycle = ['En attente', 'En cours', 'Livrée'];
-      order.status = cycle[(cycle.indexOf(order.status) + 1) % cycle.length];
-      const overrides = JSON.parse(localStorage.getItem(OVERRIDES_KEY) || '{}');
-      overrides[id] = order.status;
-      localStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides));
-      updateStats();
-      filterOrders();
+      const newStatus = cycle[(cycle.indexOf(order.status) + 1) % cycle.length];
+      try {
+        const r = await postAction({ action: 'update', order: Object.assign({}, order, { status: newStatus }) });
+        if (!r.ok) throw new Error(r.error || 'Erreur');
+        loadOrders();
+      } catch (e) { alert('Erreur : ' + e.message); }
+    }
+
+    function openEdit(id) {
+      const o = orders.find(x => x.id === id);
+      if (!o) return;
+      editingId = id;
+      document.getElementById('editIdLabel').textContent = '#' + id;
+      document.getElementById('editDate').value = o.date;
+      document.getElementById('editClient').value = o.client;
+      document.getElementById('editPhone').value = o.phone;
+      document.getElementById('editArticles').value = o.articles;
+      document.getElementById('editTotal').value = o.total;
+      document.getElementById('editStatus').value = o.status;
+      document.getElementById('editNotes').value = o.notes || '';
+      document.getElementById('editModal').style.display = 'flex';
+    }
+
+    async function saveEdit() {
+      const order = {
+        id: editingId,
+        date: document.getElementById('editDate').value.trim(),
+        client: document.getElementById('editClient').value.trim(),
+        phone: document.getElementById('editPhone').value.trim(),
+        articles: document.getElementById('editArticles').value.trim(),
+        total: document.getElementById('editTotal').value.trim(),
+        status: document.getElementById('editStatus').value,
+        notes: document.getElementById('editNotes').value.trim()
+      };
+      try {
+        const r = await postAction({ action: 'update', order: order });
+        if (!r.ok) throw new Error(r.error || 'Erreur');
+        closeModal('editModal');
+        loadOrders();
+      } catch (e) { alert('Erreur : ' + e.message); }
+    }
+
+    async function deleteOrder(id) {
+      const o = orders.find(x => x.id === id);
+      if (!confirm('Supprimer définitivement la commande #' + id + ' (' + (o ? o.client : '') + ') ?')) return;
+      try {
+        const r = await postAction({ action: 'delete', id: id });
+        if (!r.ok) throw new Error(r.error || 'Erreur');
+        loadOrders();
+      } catch (e) { alert('Erreur : ' + e.message); }
     }
 
     // ============ REÇU ============
@@ -411,7 +501,7 @@
     }
 
     function parseArticles(text) {
-      return text.split(',').map(a => a.trim()).filter(a => a).map(a => {
+      return String(text).split(',').map(a => a.trim()).filter(a => a).map(a => {
         const m = a.match(/(.+?)\s*x\s*(\d+)\s*=\s*([\d\s\.]+)\s*FCFA/i);
         if (m) return { label: m[1].trim() + ' x ' + m[2], price: parseInt(m[3].replace(/\D/g, '')) || 0 };
         return { label: a, price: 0 };
@@ -550,6 +640,7 @@
 
     // ============ PARAMÈTRES ============
     function showSettings() {
+      document.getElementById('cfgScriptUrl').value = config.scriptUrl;
       document.getElementById('cfgSheetUrl').value = config.sheetUrl;
       document.getElementById('cfgShopName').value = config.shopName;
       document.getElementById('cfgShopAddress').value = config.shopAddress;
@@ -565,6 +656,7 @@
     }
 
     function saveSettings() {
+      config.scriptUrl = document.getElementById('cfgScriptUrl').value.trim();
       config.sheetUrl = document.getElementById('cfgSheetUrl').value.trim();
       config.shopName = document.getElementById('cfgShopName').value.trim() || 'PROCURE SHOP';
       config.shopAddress = document.getElementById('cfgShopAddress').value.trim();
@@ -580,6 +672,7 @@
       saveConfig();
       alert('Paramètres enregistrés !');
       closeModal('settingsModal');
+      document.getElementById('scriptBanner').style.display = config.scriptUrl ? 'none' : 'flex';
       loadOrders();
     }
 
