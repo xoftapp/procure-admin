@@ -10,6 +10,7 @@
 :root{--primary:#1e3a8a;--primary-dark:#1e40af;--primary-light:#3b82f6;--success:#10b981;--warning:#f59e0b;--danger:#ef4444;--gray:#64748b;--dark:#0f172a}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#f0f4ff,#e6f0ff);color:var(--dark);line-height:1.6;min-height:100vh}
+.small{color:var(--gray);font-size:.8rem}
 .login-container{display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
 .login-box{background:#fff;padding:2.5rem;border-radius:16px;box-shadow:0 10px 40px rgba(30,58,138,.2);width:100%;max-width:400px;text-align:center}
 .login-box h1{color:var(--primary);margin-bottom:.5rem;font-size:1.8rem}
@@ -28,12 +29,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
 .nav-tab.active{background:var(--primary);color:#fff;border-color:var(--primary)}
 .tab-page{display:none}
 .tab-page.active{display:block}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:1.5rem}
-.stat-card{background:#fff;padding:1.5rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.08);border-left:4px solid var(--primary)}
-.stat-card h3{color:var(--gray);font-size:.85rem;text-transform:uppercase;margin-bottom:.5rem}
-.stat-value{font-size:2rem;font-weight:bold;color:var(--primary-dark)}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.2rem;margin-bottom:1.5rem}
+.stat-card{background:#fff;padding:1.3rem;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.08);border-left:4px solid var(--primary)}
+.stat-card h3{color:var(--gray);font-size:.82rem;text-transform:uppercase;margin-bottom:.5rem}
+.stat-value{font-size:1.9rem;font-weight:bold;color:var(--primary-dark)}
 .stat-card.pending{border-left-color:var(--warning)}.stat-card.pending .stat-value{color:var(--warning)}
 .stat-card.delivered{border-left-color:var(--success)}.stat-card.delivered .stat-value{color:var(--success)}
+.stat-card.blue{border-left-color:var(--primary-light)}.stat-card.blue .stat-value{color:var(--primary-light)}
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:1rem;align-items:center}
 .filters{background:#fff;padding:1rem;border-radius:12px;margin-bottom:1rem;display:flex;gap:1rem;flex-wrap:wrap;flex:1}
 .filters input,.filters select{padding:.7rem 1rem;border:2px solid #cbd5e1;border-radius:8px;font-size:.95rem}
@@ -78,12 +80,13 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
 .save-btn{background:var(--success);color:#fff;border:none;padding:.8rem 1.5rem;border-radius:8px;cursor:pointer;font-weight:bold}
 .chart-card{background:#fff;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,.08);padding:1.5rem;margin-bottom:1.5rem}
 .chart-card h3{color:var(--primary);margin-bottom:1rem}
-.chart{display:flex;align-items:flex-end;gap:10px;height:230px;padding-top:1rem}
+.chart{display:flex;align-items:flex-end;gap:8px;height:230px;padding-top:1rem}
 .bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
-.bar{width:100%;max-width:60px;background:linear-gradient(180deg,var(--primary-light),var(--primary));border-radius:6px 6px 0 0;min-height:4px}
-.bar-label{font-size:.75rem;color:var(--gray)}
-.bar-value{font-size:.68rem;font-weight:700;color:var(--primary-dark)}
+.bar{width:100%;max-width:55px;background:linear-gradient(180deg,var(--primary-light),var(--primary));border-radius:6px 6px 0 0;min-height:4px}
+.bar-label{font-size:.72rem;color:var(--gray)}
+.bar-value{font-size:.62rem;font-weight:700;color:var(--primary-dark)}
 .grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.5rem}
+.cost-preview{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af;padding:.8rem 1rem;border-radius:8px;font-weight:600;margin-bottom:1rem}
 .loading,.empty-state{text-align:center;padding:2.5rem;color:var(--gray)}
 .spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(30,58,138,.3);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;margin-left:8px;vertical-align:middle}
 @keyframes spin{to{transform:rotate(360deg)}}
@@ -92,7 +95,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
 .toast{position:fixed;top:80px;right:20px;background:#fff;padding:1rem 1.3rem;border-radius:10px;box-shadow:0 10px 30px rgba(0,0,0,.15);z-index:2000;display:flex;align-items:center;gap:10px;transform:translateX(400px);transition:.3s;border-left:4px solid var(--success);max-width:340px}
 .toast.show{transform:translateX(0)}
 .toast.error{border-left-color:var(--danger)}
-@media(max-width:768px){.container{padding:0 1rem}.stats-grid{grid-template-columns:1fr}.orders-table th,.orders-table td{padding:.5rem;font-size:.78rem}.header{padding:1rem}.chart{height:180px}}
+@media(max-width:768px){.container{padding:0 1rem}.stats-grid{grid-template-columns:1fr 1fr}.orders-table th,.orders-table td{padding:.5rem;font-size:.78rem}.header{padding:1rem}.chart{height:180px}.stat-value{font-size:1.4rem}}
 </style>
 </head>
 <body>
@@ -130,13 +133,15 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
     <div id="netBanner" class="banner" style="display:none"><span>⚠️ Actualisation momentanément impossible. Vos données affichées restent valides : cliquez sur 🔄 Actualiser.</span></div>
 
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchTab('orders')">📋 Commandes</button>
-      <button class="nav-tab" onclick="switchTab('stats')">📈 Statistiques</button>
-      <button class="nav-tab" onclick="switchTab('articles')">📦 Articles</button>
-      <button class="nav-tab" onclick="switchTab('clients')">👥 Clients</button>
+      <button class="nav-tab active" onclick="switchTab('orders',this)">📋 Commandes</button>
+      <button class="nav-tab" onclick="switchTab('stats',this)">📈 Statistiques</button>
+      <button class="nav-tab" onclick="switchTab('depenses',this)">💸 Dépenses</button>
+      <button class="nav-tab" onclick="switchTab('report',this)">📑 Rapport mensuel</button>
+      <button class="nav-tab" onclick="switchTab('articles',this)">📦 Articles</button>
+      <button class="nav-tab" onclick="switchTab('clients',this)">👥 Clients</button>
     </div>
 
-    <!-- ONGLET COMMANDES -->
+    <!-- COMMANDES -->
     <div id="page-orders" class="tab-page active">
       <div class="stats-grid">
         <div class="stat-card"><h3>Total commandes</h3><div class="stat-value" id="statTotal">0</div></div>
@@ -163,29 +168,89 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
       </div>
     </div>
 
-    <!-- ONGLET STATISTIQUES -->
+    <!-- STATISTIQUES -->
     <div id="page-stats" class="tab-page">
       <div class="chart-card">
-        <h3>💰 Chiffre d'affaires livré (8 derniers mois)</h3>
+        <div class="toolbar"><h3 style="flex:1;margin:0">💰 Chiffre d'affaires livré par mois</h3><select id="statYear" onchange="renderStats()" style="padding:.6rem 1rem;border:2px solid #cbd5e1;border-radius:8px"></select></div>
         <div class="chart" id="chartEl"></div>
       </div>
       <div class="grid-2">
-        <div class="chart-card">
-          <h3>🏆 Top articles vendus (commandes livrées)</h3>
-          <div id="topEl"></div>
-        </div>
-        <div class="chart-card">
-          <h3>📊 Répartition des statuts</h3>
-          <div id="statusEl"></div>
-        </div>
+        <div class="chart-card"><h3>🏆 Top articles vendus (commandes livrées)</h3><div id="topEl"></div></div>
+        <div class="chart-card"><h3>📊 Répartition des statuts</h3><div id="statusEl"></div></div>
       </div>
     </div>
 
-    <!-- ONGLET ARTICLES -->
-    <div id="page-articles" class="tab-page">
-      <div class="toolbar">
-        <button class="tool-btn green" onclick="openArticleForm(null)">➕ Ajouter un article</button>
+    <!-- DÉPENSES -->
+    <div id="page-depenses" class="tab-page">
+      <div class="stats-grid">
+        <div class="stat-card pending"><h3>Dépenses du mois en cours</h3><div class="stat-value" id="depMonthTotal" style="font-size:1.5rem">0 FCFA</div></div>
+        <div class="stat-card blue"><h3>Total dépenses enregistré</h3><div class="stat-value" id="depAllTotal" style="font-size:1.5rem">0 FCFA</div></div>
       </div>
+      <div class="chart-card">
+        <h3>➕ Enregistrer une dépense</h3>
+        <div class="grid-2">
+          <div>
+            <div class="form-group"><label>Date</label><input type="date" id="dfDate"></div>
+            <div class="form-group"><label>Type de dépense</label>
+              <select id="dfType" onchange="depTypeChange()"><option value="Stock">Achat de stock</option><option value="Autre">Autre dépense</option></select>
+            </div>
+            <div id="dfStockFields">
+              <div class="form-group"><label>Article</label><select id="dfArticle" onchange="updateDepCost()"><option value="">-- Sélectionnez --</option></select></div>
+              <div class="form-group"><label>Mode d'achat</label>
+                <select id="dfMode" onchange="depModeChange()"><option value="Unité">Par unité</option><option value="Lot">Par lot</option></select>
+              </div>
+              <div id="dfUnitFields">
+                <div class="form-group"><label>Quantité (unités)</label><input type="number" id="dfQty" oninput="updateDepCost()" placeholder="Ex: 10"></div>
+                <div class="form-group"><label>Prix unitaire d'achat (FCFA)</label><input type="number" id="dfUnitPrice" oninput="updateDepCost()" placeholder="Ex: 450"></div>
+              </div>
+              <div id="dfLotFields" style="display:none">
+                <div class="form-group"><label>Nombre de lots</label><input type="number" id="dfLots" oninput="updateDepCost()" placeholder="Ex: 2"></div>
+                <div class="form-group"><label>Unités par lot</label><input type="number" id="dfPerLot" oninput="updateDepCost()" placeholder="Ex: 12"></div>
+                <div class="form-group"><label>Prix d'un lot (FCFA)</label><input type="number" id="dfLotPrice" oninput="updateDepCost()" placeholder="Ex: 5000"></div>
+              </div>
+            </div>
+            <div id="dfOtherFields" style="display:none">
+              <div class="form-group"><label>Libellé de la dépense</label><input type="text" id="dfLabel" placeholder="Ex: Transport, loyer, emballages..."></div>
+              <div class="form-group"><label>Coût total (FCFA)</label><input type="number" id="dfOtherCost" oninput="updateDepCost()" placeholder="Ex: 3000"></div>
+            </div>
+          </div>
+          <div>
+            <div class="cost-preview" id="dfCostPreview">Coût total : 0 FCFA</div>
+            <p class="small" style="margin-bottom:1rem">💡 Un achat de stock augmente automatiquement le stock de l'article concerné. La suppression d'une dépense de stock retire la quantité correspondante.</p>
+            <button class="save-btn" onclick="saveDepense()">💾 Enregistrer la dépense</button>
+          </div>
+        </div>
+      </div>
+      <div class="orders-container">
+        <table class="orders-table">
+          <thead><tr><th>ID</th><th>Date</th><th>Libellé</th><th>Type</th><th>Mode</th><th>Quantité</th><th>Coût</th><th>Actions</th></tr></thead>
+          <tbody id="depensesTableBody"><tr><td colspan="8" class="loading">Chargement...</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- RAPPORT MENSUEL -->
+    <div id="page-report" class="tab-page">
+      <div class="chart-card">
+        <h3 id="rpLabel">📑 Rapport financier mensuel</h3>
+        <div class="toolbar">
+          <select id="rpYear" onchange="buildMonthOptions()" style="padding:.6rem 1rem;border:2px solid #cbd5e1;border-radius:8px"></select>
+          <select id="rpMonth" onchange="loadReport()" style="padding:.6rem 1rem;border:2px solid #cbd5e1;border-radius:8px"></select>
+          <button class="tool-btn" onclick="sendReportTG()">📨 Envoyer sur Telegram</button>
+        </div>
+        <p class="small" style="margin-bottom:1rem">Disponible uniquement pour les mois bouclés (strictement antérieurs au mois en cours).<br>
+        <strong>AP</strong> = avoir de fin du mois précédent • <strong>TR</strong> = ventes livrées du mois • <strong>TA</strong> = AP + TR • <strong>TD</strong> = dépenses du mois • <strong>Solde</strong> = TA − TD</p>
+        <div class="stats-grid" id="reportCards"><div class="empty-state">Sélectionnez un mois</div></div>
+      </div>
+    </div>
+
+    <!-- ARTICLES -->
+    <div id="page-articles" class="tab-page">
+      <div class="stats-grid">
+        <div class="stat-card blue"><h3>Valeur du stock (prix de vente)</h3><div class="stat-value" id="stockSaleValue" style="font-size:1.5rem">0 FCFA</div></div>
+        <div class="stat-card"><h3>Valeur du stock (coût d'achat moyen)</h3><div class="stat-value" id="stockCostValue" style="font-size:1.5rem">0 FCFA</div></div>
+      </div>
+      <div class="toolbar"><button class="tool-btn green" onclick="openArticleForm(null)">➕ Ajouter un article</button></div>
       <div class="orders-container">
         <table class="orders-table">
           <thead><tr><th>Catégorie</th><th>Article</th><th>Prix</th><th>Disponibilité</th><th>Stock</th><th>Seuil</th><th>Actions</th></tr></thead>
@@ -194,7 +259,7 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
       </div>
     </div>
 
-    <!-- ONGLET CLIENTS -->
+    <!-- CLIENTS -->
     <div id="page-clients" class="tab-page">
       <div class="orders-container">
         <table class="orders-table">
@@ -302,7 +367,8 @@ body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135d
 <script>
 const CONFIG_KEY='procure_admin_config';
 const MONTHS=['jan','fév','mar','avr','mai','juin','juil','aoû','sep','oct','nov','déc'];
-let config=null,orders=[],articles=[],clients=[],currentOrder=null,editingId=null,editingArticleName=null,shopInfo=null,deliveredOrder=null;
+const MONTHS_FULL=['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+let config=null,orders=[],articles=[],clients=[],depenses=[],currentOrder=null,editingId=null,editingArticleName=null,shopInfo=null,deliveredOrder=null,reportData=null;
 
 function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
 function fmt(v){const n=Math.round(Number(String(v).replace(/[^\d.-]/g,''))||0);return String(Math.abs(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' ');}
@@ -313,6 +379,7 @@ function formatDateFrench(s){if(!s)return'';s=String(s).trim();const m=s.match(/
 function waURL(phone,text){const p=phone.replace(/\D/g,''),enc=encodeURIComponent(text);return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)?'https://api.whatsapp.com/send?phone='+p+'&text='+enc:'https://wa.me/'+p+'?text='+enc;}
 function toast(msg,type='success'){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;document.getElementById('toastIco').textContent=type==='error'?'✕':'✓';t.className='toast show'+(type==='error'?' error':'');setTimeout(()=>t.classList.remove('show'),3000);}
 function waitJsPDF(ms){return new Promise((res,rej)=>{const t0=Date.now();(function chk(){if(window.jspdf)return res();if(Date.now()-t0>ms)return rej(new Error('timeout'));setTimeout(chk,100);})();});}
+function num(v){return parseInt(String(v).replace(/\D/g,''),10)||0;}
 
 async function fetchJSONRetry(url,tries){let last=null;for(let a=1;a<=(tries||3);a++){try{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);const d=await r.json();if(d&&d.ok)return d;throw new Error(d&&d.error?d.error:'Réponse invalide');}catch(e){last=e;if(a<(tries||3))await sleep(900*a);}}throw last;}
 async function postAction(payload){let last=null;for(let a=1;a<=3;a++){try{const r=await fetch(config.scriptUrl,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)});const d=await r.json();if(d&&d.ok)return d;throw new Error(d&&d.error?d.error:'Erreur serveur');}catch(e){last=e;if(a<3)await sleep(900*a);}}throw last;}
@@ -348,14 +415,16 @@ async function ensureShopInfo(){
   }catch(e){shopInfo=fallback;}
 }
 
-function switchTab(name){
+function switchTab(name,btn){
   document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.tab-page').forEach(p=>p.classList.remove('active'));
-  event.target.classList.add('active');
+  btn.classList.add('active');
   document.getElementById('page-'+name).classList.add('active');
   if(name==='stats')renderStats();
   if(name==='articles')loadArticlesTab();
   if(name==='clients')loadClients();
+  if(name==='depenses')openDepenses();
+  if(name==='report')initReportSelectors();
 }
 
 // === COMMANDES ===
@@ -385,7 +454,7 @@ function updateStats(){
   document.getElementById('statTotal').textContent=orders.length;
   document.getElementById('statPending').textContent=orders.filter(o=>o.status==='En attente').length;
   document.getElementById('statDelivered').textContent=orders.filter(o=>o.status==='Livrée').length;
-  const rev=orders.filter(o=>o.status==='Livrée').reduce((s,o)=>s+(parseInt(String(o.total).replace(/\D/g,''))||0),0);
+  const rev=orders.filter(o=>o.status==='Livrée').reduce((s,o)=>s+num(o.total),0);
   document.getElementById('statRevenue').textContent=fmt(rev)+' FCFA';
 }
 function filterOrders(){
@@ -459,7 +528,7 @@ async function exportPDF(){
       doc.text(o.status,240,y);
       y+=6;
     });
-    const totalAll=orders.reduce((s2,o)=>s2+(parseInt(String(o.total).replace(/\D/g,''))||0),0);
+    const totalAll=orders.reduce((s2,o)=>s2+num(o.total),0);
     y+=4;doc.setFont('times','bold');
     doc.text('TOTAL GÉNÉRAL : '+fmt(totalAll)+' FCFA (toutes commandes confondues)',W-14,y,{align:'right'});
     doc.save('etat_commandes.pdf');
@@ -467,21 +536,183 @@ async function exportPDF(){
   }catch(e){toast('Erreur d\'export','error');}
 }
 
-// === STATISTIQUES ===
+// === STATISTIQUES (12 mois + sélecteur d'année) ===
 function parseArticles(t){return String(t||'').split(',').map(a=>a.trim()).filter(Boolean).map(a=>{const m=a.match(/^(.*?)\s*x\s*(\d+)\s*=\s*([\d\s\u00a0\u202f\.]+)\s*FCFA$/i);if(m)return{name:m[1].trim(),qty:parseInt(m[2],10)||1,price:parseInt(m[3].replace(/[^\d]/g,''))||0};return{name:a,qty:1,price:0};});}
+function yearsAvailable(){
+  const ys=new Set();const now=new Date().getFullYear();
+  orders.forEach(o=>{const p=String(o.date).split(' ')[0].split('/');if(p[2])ys.add(parseInt(p[2],10));});
+  ys.add(now);
+  return [...ys].sort((a,b)=>b-a);
+}
 function renderStats(){
+  const sel=document.getElementById('statYear');
+  const prev=sel.value?parseInt(sel.value,10):new Date().getFullYear();
+  const years=yearsAvailable();
+  if(!years.includes(prev))years.push(prev);
+  years.sort((a,b)=>b-a);
+  sel.innerHTML=years.map(y=>'<option value="'+y+'"'+(y===prev?' selected':'')+'>'+y+'</option>').join('');
+  const cur=prev;
   const del=orders.filter(o=>o.status==='Livrée');
-  const now=new Date();const months=[];
-  for(let i=7;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months.push({y:d.getFullYear(),m:d.getMonth(),label:MONTHS[d.getMonth()],total:0});}
-  del.forEach(o=>{const p=String(o.date).split(' ')[0].split('/');if(p.length===3){const slot=months.find(x=>x.m===parseInt(p[1],10)-1&&x.y===parseInt(p[2],10));if(slot)slot.total+=parseInt(String(o.total).replace(/\D/g,''))||0;}});
+  const months=[];
+  for(let m=1;m<=12;m++)months.push({m,label:MONTHS[m-1],total:0});
+  del.forEach(o=>{const p=String(o.date).split(' ')[0].split('/');if(p.length===3&&parseInt(p[2],10)===cur){const slot=months[parseInt(p[1],10)-1];if(slot)slot.total+=num(o.total);}});
   const max=Math.max.apply(null,months.map(x=>x.total).concat([1]));
-  document.getElementById('chartEl').innerHTML=months.map(x=>'<div class="bar-wrap"><div class="bar-value">'+(x.total?fmt(x.total):'')+'</div><div class="bar" style="height:'+Math.max(4,Math.round(x.total/max*100))+'%" title="'+x.label+' : '+fmt(x.total)+' FCFA"></div><div class="bar-label">'+x.label+'</div></div>').join('');
+  document.getElementById('chartEl').innerHTML=months.map(x=>'<div class="bar-wrap"><div class="bar-value">'+(x.total?fmt(x.total):'')+'</div><div class="bar" style="height:'+Math.max(4,Math.round(x.total/max*100))+'%" title="'+x.label+' '+cur+' : '+fmt(x.total)+' FCFA"></div><div class="bar-label">'+x.label+'</div></div>').join('');
   const map={};
   del.forEach(o=>parseArticles(o.articles).forEach(it=>{map[it.name]=map[it.name]||{qty:0,ca:0};map[it.name].qty+=it.qty;map[it.name].ca+=it.price*it.qty;}));
   const top=Object.entries(map).sort((a,b)=>b[1].ca-a[1].ca).slice(0,8);
   document.getElementById('topEl').innerHTML=top.length?'<table class="orders-table"><thead><tr><th>Article</th><th>Qté</th><th>CA généré</th></tr></thead><tbody>'+top.map(e=>'<tr><td>'+escapeHtml(e[0])+'</td><td>'+e[1].qty+'</td><td><strong>'+fmt(e[1].ca)+' FCFA</strong></td></tr>').join('')+'</tbody></table>':'<div class="empty-state">Aucune vente livrée pour le moment</div>';
   const pend=orders.filter(o=>o.status==='En attente').length,prog=orders.filter(o=>o.status==='En cours').length;
   document.getElementById('statusEl').innerHTML='<p style="margin:.4rem 0">⏳ En attente : <strong>'+pend+'</strong></p><p style="margin:.4rem 0">🚚 En cours : <strong>'+prog+'</strong></p><p style="margin:.4rem 0">✅ Livrées : <strong>'+del.length+'</strong></p><p style="margin:.4rem 0">📦 Total : <strong>'+orders.length+'</strong></p>';
+}
+
+// === DÉPENSES ===
+async function openDepenses(){
+  if(!articles.length){try{const d=await fetchJSONRetry(config.scriptUrl+'?action=articles',2);articles=d.articles||[];}catch(e){}}
+  const sel=document.getElementById('dfArticle');
+  sel.innerHTML='<option value="">-- Sélectionnez --</option>'+articles.map(a=>'<option value="'+escapeHtml(a.name)+'">'+escapeHtml(a.name)+'</option>').join('');
+  if(!document.getElementById('dfDate').value)document.getElementById('dfDate').value=new Date().toISOString().slice(0,10);
+  loadDepenses();
+}
+function depTypeChange(){
+  const t=document.getElementById('dfType').value;
+  document.getElementById('dfStockFields').style.display=(t==='Stock')?'block':'none';
+  document.getElementById('dfOtherFields').style.display=(t==='Autre')?'block':'none';
+  depModeChange();
+}
+function depModeChange(){
+  const m=document.getElementById('dfMode').value;
+  document.getElementById('dfUnitFields').style.display=(m==='Unité')?'block':'none';
+  document.getElementById('dfLotFields').style.display=(m==='Lot')?'block':'none';
+  updateDepCost();
+}
+function depCompute(){
+  const t=document.getElementById('dfType').value;
+  let cost=0,qty=0;
+  if(t==='Stock'){
+    if(document.getElementById('dfMode').value==='Unité'){
+      qty=Number(document.getElementById('dfQty').value||0);
+      cost=qty*Number(document.getElementById('dfUnitPrice').value||0);
+    }else{
+      const lots=Number(document.getElementById('dfLots').value||0);
+      qty=lots*Number(document.getElementById('dfPerLot').value||0);
+      cost=lots*Number(document.getElementById('dfLotPrice').value||0);
+    }
+  }else{
+    cost=Number(document.getElementById('dfOtherCost').value||0);
+  }
+  return{cost,qty};
+}
+function updateDepCost(){
+  const c=depCompute();
+  document.getElementById('dfCostPreview').textContent='Coût total : '+fmt(c.cost)+' FCFA'+(c.qty?' • Quantité acquise : '+c.qty:'');
+}
+async function saveDepense(){
+  const t=document.getElementById('dfType').value;
+  const dateVal=document.getElementById('dfDate').value;
+  let dateStr='';
+  if(dateVal){const p=dateVal.split('-');dateStr=p[2]+'/'+p[1]+'/'+p[0];}
+  let libelle='',mode='',qty=0,cost=0;
+  if(t==='Stock'){
+    libelle=document.getElementById('dfArticle').value;
+    if(!libelle)return toast('Sélectionnez un article','error');
+    mode=document.getElementById('dfMode').value;
+    const c=depCompute();qty=c.qty;cost=c.cost;
+    if(!qty)return toast('Quantité invalide','error');
+  }else{
+    libelle=document.getElementById('dfLabel').value.trim();
+    cost=Number(document.getElementById('dfOtherCost').value||0);
+  }
+  if(!libelle)return toast('Libellé manquant','error');
+  if(!cost||cost<=0)return toast('Coût invalide','error');
+  try{
+    await postAction({action:'addDepense',depense:{date:dateStr,libelle,type:t,mode,qty,cost}});
+    toast('Dépense enregistrée'+(t==='Stock'?' et stock mis à jour':''));
+    document.getElementById('dfQty').value='';document.getElementById('dfUnitPrice').value='';
+    document.getElementById('dfLots').value='';document.getElementById('dfPerLot').value='';document.getElementById('dfLotPrice').value='';
+    document.getElementById('dfOtherCost').value='';document.getElementById('dfLabel').value='';
+    updateDepCost();
+    loadDepenses();
+    try{const d=await fetchJSONRetry(config.scriptUrl+'?action=articles',2);articles=d.articles||[];renderStockValue();if(document.getElementById('page-articles').classList.contains('active'))renderArticles();}catch(e){}
+  }catch(e){toast('Erreur : '+e.message,'error');}
+}
+async function loadDepenses(){
+  const tbody=document.getElementById('depensesTableBody');
+  tbody.innerHTML='<tr><td colspan="8" class="loading">Chargement...</td></tr>';
+  try{
+    const d=await fetchJSONRetry(config.scriptUrl+'?action=depenses',3);
+    depenses=d.depenses||[];
+    renderDepenses();
+    renderStockValue();
+    const now=new Date();
+    const monthCost=depenses.filter(x=>{const p=String(x.date).split(' ')[0].split('/');return p.length===3&&+p[1]===(now.getMonth()+1)&&+p[2]===now.getFullYear();}).reduce((s,x)=>s+Number(x.cost||0),0);
+    document.getElementById('depMonthTotal').textContent=fmt(monthCost)+' FCFA';
+    document.getElementById('depAllTotal').textContent=fmt(depenses.reduce((s,x)=>s+Number(x.cost||0),0))+' FCFA';
+  }catch(e){tbody.innerHTML='<tr><td colspan="8" class="empty-state">Erreur de chargement</td></tr>';}
+}
+function renderDepenses(){
+  const tbody=document.getElementById('depensesTableBody');
+  if(!depenses.length){tbody.innerHTML='<tr><td colspan="8" class="empty-state">Aucune dépense enregistrée</td></tr>';return;}
+  tbody.innerHTML=depenses.slice().reverse().map(x=>'<tr><td>#'+x.id+'</td><td>'+formatDateFrench(x.date)+'</td><td><strong>'+escapeHtml(x.libelle)+'</strong></td><td>'+(x.type==='Stock'?'<span class="badge stock">Achat stock</span>':'<span class="badge none">Autre</span>')+'</td><td>'+escapeHtml(x.mode||'—')+'</td><td>'+(x.qty||'—')+'</td><td><strong>'+fmt(x.cost)+' FCFA</strong></td><td><button class="action-btn btn-delete" onclick="deleteDepense(\''+x.id+'\')">🗑️</button></td></tr>').join('');
+}
+async function deleteDepense(id){
+  if(!confirm('Supprimer cette dépense ? Le stock sera ajusté en conséquence.'))return;
+  try{
+    await postAction({action:'deleteDepense',id:id});
+    toast('Dépense supprimée');
+    loadDepenses();
+    try{const d=await fetchJSONRetry(config.scriptUrl+'?action=articles',2);articles=d.articles||[];renderStockValue();if(document.getElementById('page-articles').classList.contains('active'))renderArticles();}catch(e){}
+  }catch(e){toast('Erreur : '+e.message,'error');}
+}
+
+// === RAPPORT MENSUEL ===
+function initReportSelectors(){
+  const ySel=document.getElementById('rpYear');
+  const now=new Date();
+  const years=yearsAvailable();
+  let dy=now.getFullYear(),dm=now.getMonth();
+  if(dm===0){dy-=1;dm=12;}
+  if(!years.includes(dy))years.push(dy);
+  years.sort((a,b)=>b-a);
+  ySel.innerHTML=years.map(y=>'<option value="'+y+'"'+(y===dy?' selected':'')+'>'+y+'</option>').join('');
+  buildMonthOptions();
+}
+function buildMonthOptions(){
+  const ySel=document.getElementById('rpYear'),mSel=document.getElementById('rpMonth');
+  const y=parseInt(ySel.value,10);
+  const now=new Date();
+  const maxMonth=(y<now.getFullYear())?12:(y===now.getFullYear()?now.getMonth():0);
+  let opts='';
+  for(let m=1;m<=maxMonth;m++)opts+='<option value="'+m+'">'+MONTHS_FULL[m-1]+'</option>';
+  mSel.innerHTML=opts||'<option value="">Aucun mois bouclé</option>';
+  if(maxMonth>0)mSel.value=String(maxMonth);
+  loadReport();
+}
+async function loadReport(){
+  const y=parseInt(document.getElementById('rpYear').value,10);
+  const m=parseInt(document.getElementById('rpMonth').value,10);
+  const box=document.getElementById('reportCards');
+  if(!y||!m){box.innerHTML='<div class="empty-state">Aucun mois bouclé disponible pour cette année</div>';reportData=null;return;}
+  box.innerHTML='<div class="loading">Calcul du rapport...</div>';
+  try{
+    const d=await postAction({action:'report',year:y,month:m});
+    reportData={year:y,month:m};
+    const r=d.report;
+    document.getElementById('rpLabel').textContent='📑 Rapport financier — '+MONTHS_FULL[m-1]+' '+y;
+    box.innerHTML=
+      '<div class="stat-card"><h3>💼 Avoir Précédent (AP)</h3><div class="stat-value" style="font-size:1.4rem">'+fmt(r.ap)+' FCFA</div></div>'+
+      '<div class="stat-card delivered"><h3>💰 Total des Recettes (TR)</h3><div class="stat-value" style="font-size:1.4rem">'+fmt(r.tr)+' FCFA</div></div>'+
+      '<div class="stat-card blue"><h3>🏦 Total des Avoirs (TA)</h3><div class="stat-value" style="font-size:1.4rem">'+fmt(r.ta)+' FCFA</div></div>'+
+      '<div class="stat-card pending"><h3>💸 Total des Dépenses (TD)</h3><div class="stat-value" style="font-size:1.4rem">'+fmt(r.td)+' FCFA</div></div>'+
+      '<div class="stat-card delivered"><h3>✅ Solde</h3><div class="stat-value" style="font-size:1.4rem">'+fmt(r.solde)+' FCFA</div></div>';
+  }catch(e){box.innerHTML='<div class="empty-state">Erreur de calcul du rapport</div>';reportData=null;}
+}
+async function sendReportTG(){
+  if(!reportData)return toast('Chargez d\'abord un rapport','error');
+  try{
+    const d=await postAction({action:'sendReport',year:reportData.year,month:reportData.month});
+    toast(d.ok?'Rapport envoyé sur Telegram':(d.error||'Erreur'),d.ok?'success':'error');
+  }catch(e){toast('Erreur : '+e.message,'error');}
 }
 
 // === ARTICLES ===
@@ -492,6 +723,8 @@ async function loadArticlesTab(){
     const d=await fetchJSONRetry(config.scriptUrl+'?action=articles',3);
     articles=d.articles||[];
     renderArticles();
+    if(!depenses.length){try{const dd=await fetchJSONRetry(config.scriptUrl+'?action=depenses',2);depenses=dd.depenses||[];}catch(e){}}
+    renderStockValue();
   }catch(e){tbody.innerHTML='<tr><td colspan="7" class="empty-state">Erreur de chargement</td></tr>';}
 }
 function dispoOf(a){
@@ -506,13 +739,23 @@ function renderArticles(){
   tbody.innerHTML=articles.map(a=>{
     const d=dispoOf(a);
     const badge=d==='stock'?'<span class="badge stock">Stock géré</span>':d==='commande'?'<span class="badge commande">Sur commande</span>':'<span class="badge none">Non suivi</span>';
-    const stockCell=d==='stock'?escapeHtml(a.stock):(d==='commande'?'—':'—');
-    return '<tr><td>'+escapeHtml(a.category)+'</td><td><strong>'+escapeHtml(a.name)+'</strong></td><td>'+fmt(a.price)+' FCFA</td><td>'+badge+'</td><td>'+stockCell+'</td><td>'+(a.seuil?escapeHtml(a.seuil):'—')+'</td><td><button class="action-btn btn-edit" onclick="openArticleForm(\''+a.name.replace(/'/g,"\\'")+'\')">✏️ Modifier</button></td></tr>';
+    return '<tr><td>'+escapeHtml(a.category)+'</td><td><strong>'+escapeHtml(a.name)+'</strong></td><td>'+fmt(a.price)+' FCFA</td><td>'+badge+'</td><td>'+(d==='stock'?escapeHtml(a.stock):'—')+'</td><td>'+(a.seuil?escapeHtml(a.seuil):'—')+'</td><td><button class="action-btn btn-edit" onclick="openArticleForm(\''+a.name.replace(/'/g,"\\'")+'\')">✏️ Modifier</button></td></tr>';
   }).join('');
 }
-function toggleDispo(){
-  document.getElementById('dispoStockFields').style.display=(document.getElementById('afDispo').value==='stock')?'block':'none';
+function renderStockValue(){
+  const avg={};
+  depenses.filter(x=>x.type==='Stock'&&Number(x.qty)>0).forEach(x=>{avg[x.libelle]=avg[x.libelle]||{c:0,q:0};avg[x.libelle].c+=Number(x.cost||0);avg[x.libelle].q+=Number(x.qty||0);});
+  let saleValue=0,costValue=0;
+  articles.forEach(a=>{
+    if(dispoOf(a)!=='stock')return;
+    const stock=parseInt(String(a.stock).replace(/\D/g,''),10)||0;
+    saleValue+=stock*num(a.price);
+    if(avg[a.name])costValue+=stock*(avg[a.name].c/avg[a.name].q);
+  });
+  document.getElementById('stockSaleValue').textContent=fmt(saleValue)+' FCFA';
+  document.getElementById('stockCostValue').textContent=fmt(Math.round(costValue))+' FCFA';
 }
+function toggleDispo(){document.getElementById('dispoStockFields').style.display=(document.getElementById('afDispo').value==='stock')?'block':'none';}
 function openArticleForm(name){
   editingArticleName=name||null;
   document.getElementById('articleModalTitle').textContent=name?('✏️ Modifier : '+name):'➕ Ajouter un article';
@@ -528,12 +771,8 @@ function openArticleForm(name){
       document.getElementById('afSeuil').value=a.seuil||'';
     }
   }else{
-    document.getElementById('afCat').value='';
-    document.getElementById('afName').value='';
-    document.getElementById('afPrice').value='';
-    document.getElementById('afDispo').value='stock';
-    document.getElementById('afStock').value='';
-    document.getElementById('afSeuil').value='';
+    document.getElementById('afCat').value='';document.getElementById('afName').value='';document.getElementById('afPrice').value='';
+    document.getElementById('afDispo').value='stock';document.getElementById('afStock').value='';document.getElementById('afSeuil').value='';
   }
   toggleDispo();
   document.getElementById('articleModal').style.display='flex';
